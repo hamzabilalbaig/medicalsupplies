@@ -12,8 +12,13 @@ import TopBar from "./TopBar";
 import OnboardingTabs from "./OnboardingTabs";
 import "@coreui/coreui/dist/css/coreui.min.css";
 import { CCarousel, CCarouselItem, CImage } from "@coreui/react";
-import { ArrowDropDown } from "@mui/icons-material";
+import { ArrowDropDown, Category } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { baseURL } from "../../configs/constants";
+import { useEffect } from "react";
+import { useState } from "react";
+import axios from "axios";
+import Product from "./Product";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -26,23 +31,69 @@ const Home = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [rows, setRows] = useState([]);
+  const [catData, setCatData] = useState([]);
+  const [buttons, setButtons] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`${baseURL}items/getAllItems`)
+      .then((response) => {
+        console.log(typeof response.data?.allItems, response.data?.allItems[0]);
+        let arr = [];
+        for (let i = 0; i < response.data?.allItems.length; i++) {
+          arr.push(response.data?.allItems[i]);
+        }
+        setRows(arr);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [Category]);
+
+  useEffect(() => {
+    axios
+      .get(`${baseURL}categories/getAllCategories`)
+      .then((response) => {
+        setCatData(response?.data?.allCategories);
+        response?.data?.allCategories.map((item) => {
+          setButtons((prev) => [
+            ...prev,
+            <Button
+              onClick={() => {
+                axios
+                  .post(`${baseURL}items/getAllItemsByCategory`, {
+                    category: item.name,
+                  })
+                  .then((response) => {
+                    console.log(response.data?.allItems);
+                    setRows(response.data?.allItems);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }}
+              key={item._id}
+            >
+              {item.name}
+            </Button>,
+          ]);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const buttons = [
-    <Button key="one">Blood Pressure</Button>,
-    <Button key="two">Gluco meter</Button>,
-    <Button key="three">Scales</Button>,
-  ];
+
   return (
     <Box className="h-screen">
       <TopBar />
       <Box marginX={20}>
         <Stack direction={"row"} justifyContent={"space-between"}>
-          <img
-            className="h-20"
-            src="https://medicalsuppliespk.com/wp-content/uploads/2021/06/cropped-cropped-Medical-Supplies-High-Resolution-logo-scaled-1-1024x5721-1.webp"
-          ></img>
+          <img className="h-20" src="https://i.imgur.com/DRHnWjg.jpg"></img>
 
           <Stack direction={"row"} spacing={2} alignItems={"center"}>
             <Typography className="cursor-pointer" fontWeight={"bold"}>
@@ -148,7 +199,12 @@ const Home = () => {
             </Box>
           </Grid>
           <Grid item lg={9}>
-            <Box>right</Box>
+            <Box>
+              {rows &&
+                rows.map((item) => {
+                  return <Product item={item} />;
+                })}
+            </Box>
           </Grid>
         </Grid>
       </Box>
