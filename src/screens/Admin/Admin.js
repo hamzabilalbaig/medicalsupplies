@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CardContent,
+  Drawer,
   FormControl,
   InputLabel,
   MenuItem,
@@ -13,6 +14,7 @@ import {
   TextField,
   Toolbar,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import axios from "axios";
@@ -22,8 +24,11 @@ import { baseURL } from "../../configs/constants";
 import moment from "moment/moment";
 import { Close, Delete, Save } from "@mui/icons-material";
 import { useSnackbar } from "notistack";
+import MenuIcon from "@mui/icons-material/Menu";
 
 export const Admin = () => {
+  const matches = useMediaQuery("(min-width:600px)");
+
   const navigate = useNavigate();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,6 +43,8 @@ export const Admin = () => {
   const [open2, setOpen2] = useState(false);
   const [catname, setCatName] = useState("");
   const [catdata, setCatData] = useState([]);
+  const [drawer, setDrawer] = React.useState(false);
+
   useEffect(() => {
     setLoading(true);
     axios
@@ -193,7 +200,7 @@ export const Admin = () => {
   };
 
   return (
-    <Box className="mx-10">
+    <Box marginX={matches ? 5 : 0}>
       <Modal
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
@@ -203,7 +210,7 @@ export const Admin = () => {
         }}
       >
         <Box className="h-screen w-screen flex flex-1 justify-center items-center">
-          <Card className="w-1/3 rounded-16 shadow">
+          <Card className="sm:w-1/3 w-screen rounded-16 shadow">
             <AppBar position="static" elevation={0}>
               <Toolbar>
                 <Box className="flex flex-row justify-between  w-full">
@@ -316,7 +323,7 @@ export const Admin = () => {
         }}
       >
         <Box className="h-screen w-screen flex flex-1 justify-center items-center">
-          <Card className="w-1/3 rounded-16 shadow">
+          <Card className="sm:w-1/3 w-screen rounded-16 shadow">
             <AppBar position="static" elevation={0}>
               <Toolbar>
                 <Box className="flex flex-row justify-between  w-full">
@@ -360,41 +367,113 @@ export const Admin = () => {
           </Card>
         </Box>
       </Modal>
+      <Drawer
+        anchor={"left"}
+        open={drawer}
+        onClose={() => {
+          setDrawer(false);
+        }}
+      >
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={() => {
+            setDrawer(false);
+          }}
+          onKeyDown={() => {
+            setDrawer(false);
+          }}
+        >
+          <Stack
+            marginTop={5}
+            direction={"column"}
+            spacing={5}
+            alignItems={"center"}
+          >
+            <img className="h-20" src="https://i.imgur.com/DRHnWjg.jpg"></img>
+
+            <Button
+              onClick={() => {
+                setOpen(true);
+              }}
+              variant="contained"
+            >
+              Add Item
+            </Button>
+            <Button
+              onClick={() => {
+                setOpen2(true);
+              }}
+              variant="contained"
+            >
+              Add Category
+            </Button>
+            <Button
+              onClick={() => {
+                navigate("/");
+              }}
+              variant="contained"
+            >
+              Logout
+            </Button>
+          </Stack>
+        </Box>
+      </Drawer>
       <Card className="w-full rounded-16 shadow">
         <AppBar position="static" elevation={0}>
           <Toolbar>
-            <Typography
-              variant="h4"
-              color="inherit"
-              className="flex-1 px-12  font-bold"
+            <Stack
+              direction="row"
+              spacing={90}
+              justifyContent={"space-between"}
             >
-              Items List
-            </Typography>
-            <Stack direction="row" spacing={2}>
-              <Button
-                onClick={() => {
-                  navigate("/");
-                }}
-                variant="contained"
-              >
-                Logout
-              </Button>
-              <Button
-                onClick={() => {
-                  setOpen(true);
-                }}
-                variant="contained"
-              >
-                Add Item
-              </Button>
-              <Button
-                onClick={() => {
-                  setOpen2(true);
-                }}
-                variant="contained"
-              >
-                Add Category
-              </Button>
+              <Stack direction="row" alignItems={"center"} spacing={2}>
+                <Button
+                  onClick={() => {
+                    setDrawer(true);
+                  }}
+                >
+                  <MenuIcon
+                    style={{ color: "white" }}
+                    hidden={matches}
+                  ></MenuIcon>
+                </Button>
+                <Typography
+                  noWrap
+                  variant={matches ? "h4" : "h7"}
+                  color="inherit"
+                  className="flex-1 px-0 sm:px-12  font-bold"
+                >
+                  Items List
+                </Typography>
+              </Stack>
+
+              <Stack hidden={!matches} direction="row" spacing={2}>
+                <Button
+                  onClick={() => {
+                    setOpen(true);
+                  }}
+                  variant="contained"
+                >
+                  Add Item
+                </Button>
+                <Button
+                  onClick={() => {
+                    setOpen2(true);
+                  }}
+                  variant="contained"
+                >
+                  Add Category
+                </Button>
+                <Button
+                  onClick={() => {
+                    navigate("/");
+                  }}
+                  variant="contained"
+                >
+                  Logout
+                </Button>
+              </Stack>
             </Stack>
           </Toolbar>
         </AppBar>

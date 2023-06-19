@@ -5,44 +5,49 @@ import SmsOutlinedIcon from "@mui/icons-material/SmsOutlined";
 import CallOutlinedIcon from "@mui/icons-material/CallOutlined";
 import HelpOutlineOutlinedIcon from "@mui/icons-material/HelpOutlineOutlined";
 import { topbarTextSize } from "../../configs/constants";
+import useMediaQuery from "@mui/material/useMediaQuery";
 const TopBar = () => {
+  const matches = useMediaQuery("(min-width:600px)");
   return (
-    <div className="px-32  bg-[#ececec]">
-      <Stack direction={"row"} spacing={45}>
-        <Typography noWrap variant={topbarTextSize} className=" ">
-          Buy the best medical supplies here!
-        </Typography>
-        <Stack direction={"row"}>
+    <div className="px-10 sm:px-44 w-screen overflow-hidden bg-[#ececec]  ">
+      <Stack direction={"row"} spacing={matches ? 45 : 2}>
+        <Stack>
+          <Typography noWrap variant={topbarTextSize} className=" ">
+            Buy the best medical supplies here!
+          </Typography>
+        </Stack>
+
+        <Stack direction={"row"} alignItems={"center"}>
+          <Icon sx={{ fontSize: 17 }} component={SupportAgentOutlinedIcon} />{" "}
           <Typography
             noWrap
             variant={topbarTextSize}
-            className=" cursor-pointer "
+            className=" cursor-pointer sm:block hidden"
           >
-            <Icon sx={{ fontSize: 17 }} component={SupportAgentOutlinedIcon} />{" "}
             medialSupplies@gmail.com &nbsp;&nbsp;
           </Typography>
+          <Icon sx={{ fontSize: 17 }} component={HelpOutlineOutlinedIcon} />{" "}
           <Typography
             noWrap
             variant={topbarTextSize}
-            className=" cursor-pointer"
+            className=" cursor-pointer sm:block hidden"
           >
-            <Icon sx={{ fontSize: 17 }} component={HelpOutlineOutlinedIcon} />{" "}
             Contact us on Whatsapp &nbsp;&nbsp;
           </Typography>
+          <Icon sx={{ fontSize: 17 }} component={SmsOutlinedIcon} />{" "}
           <Typography
             noWrap
             variant={topbarTextSize}
-            className=" cursor-pointer"
+            className=" cursor-pointer sm:block hidden"
           >
-            <Icon sx={{ fontSize: 17 }} component={SmsOutlinedIcon} />{" "}
             0300-2122100 &nbsp;&nbsp;
           </Typography>
+          <Icon sx={{ fontSize: 17 }} component={CallOutlinedIcon} />{" "}
           <Typography
             noWrap
             variant={topbarTextSize}
-            className=" cursor-pointer"
+            className=" cursor-pointer sm:block hidden"
           >
-            <Icon sx={{ fontSize: 17 }} component={CallOutlinedIcon} />{" "}
             0300-2122100
           </Typography>
         </Stack>

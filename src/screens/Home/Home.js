@@ -2,27 +2,30 @@ import {
   Box,
   Button,
   ButtonGroup,
+  Drawer,
   Grid,
   Popover,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React from "react";
 import TopBar from "./TopBar";
 import OnboardingTabs from "./OnboardingTabs";
 import "@coreui/coreui/dist/css/coreui.min.css";
 import { CCarousel, CCarouselItem, CImage } from "@coreui/react";
-import { ArrowDropDown, Category } from "@mui/icons-material";
+import { ArrowDropDown, Category, MenuBook } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import { baseURL } from "../../configs/constants";
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
 import Product from "./Product";
-
+import MenuIcon from "@mui/icons-material/Menu";
 const Home = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [drawer, setDrawer] = React.useState(false);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -87,15 +90,97 @@ const Home = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-
+  const matches = useMediaQuery("(min-width:600px)");
   return (
-    <Box className="h-screen">
+    <Box className="h-screen w-screen overflow-x-hidden">
+      <Drawer
+        anchor={"left"}
+        open={drawer}
+        onClose={() => {
+          setDrawer(false);
+        }}
+      >
+        <Box
+          sx={{ width: 250 }}
+          role="presentation"
+          onClick={() => {
+            setDrawer(false);
+          }}
+          onKeyDown={() => {
+            setDrawer(false);
+          }}
+        >
+          <Stack
+            marginTop={5}
+            direction={"column"}
+            spacing={5}
+            alignItems={"center"}
+          >
+            <img className="h-20" src="https://i.imgur.com/DRHnWjg.jpg"></img>
+            <Typography className="cursor-pointer" fontWeight={"bold"}>
+              Home
+            </Typography>
+            <Typography className="cursor-pointer" fontWeight={"bold"}>
+              Shop
+            </Typography>
+            <Box>
+              <Typography
+                aria-describedby={id}
+                onClick={handleClick}
+                className="cursor-pointer"
+                fontWeight={"bold"}
+              >
+                Category <ArrowDropDown></ArrowDropDown>
+              </Typography>
+              <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+              >
+                <ButtonGroup
+                  className=""
+                  orientation="vertical"
+                  aria-label="vertical outlined button group"
+                >
+                  {buttons}
+                </ButtonGroup>
+              </Popover>
+            </Box>
+            <Typography className="cursor-pointer" fontWeight={"bold"}>
+              About Us
+            </Typography>
+            <Typography className="cursor-pointer" fontWeight={"bold"}>
+              Contact
+            </Typography>
+          </Stack>
+        </Box>
+      </Drawer>
       <TopBar />
-      <Box marginX={20}>
+      <Box marginX={matches ? 20 : 0} className="px-2 sm:px-20">
         <Stack direction={"row"} justifyContent={"space-between"}>
-          <img className="h-20" src="https://i.imgur.com/DRHnWjg.jpg"></img>
+          <Stack direction={"row"} alignItems={"center"}>
+            <Button
+              onClick={() => {
+                setDrawer(true);
+              }}
+            >
+              <MenuIcon hidden={matches}></MenuIcon>
+            </Button>
 
-          <Stack direction={"row"} spacing={2} alignItems={"center"}>
+            <img className="h-20" src="https://i.imgur.com/DRHnWjg.jpg"></img>
+          </Stack>
+
+          <Stack
+            hidden={!matches}
+            direction={"row"}
+            spacing={2}
+            alignItems={"center"}
+          >
             <Typography className="cursor-pointer" fontWeight={"bold"}>
               Home
             </Typography>

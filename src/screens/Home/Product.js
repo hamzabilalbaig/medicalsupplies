@@ -20,7 +20,7 @@ const Product = ({ item }) => {
       color="error"
     >
       <img alt="" className="w-40 h-40 object-contain" src={image} />
-      <Box>
+      <Box className="ml-3 mt-2 w-full">
         <Typography
           textAlign={"left"}
           fontWeight={"bold"}
