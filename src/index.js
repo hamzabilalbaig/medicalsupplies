@@ -7,6 +7,7 @@ import Home from "./screens/Home/Home";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 import { Admin } from "./screens/Admin/Admin";
+import Login from "./screens/Login/Login";
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <Admin />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
   },
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root"));

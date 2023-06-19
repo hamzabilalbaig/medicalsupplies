@@ -227,7 +227,7 @@ const Home = () => {
             <Typography
               className="cursor-pointer underline"
               onClick={() => {
-                navigate("/admin");
+                navigate("/login");
               }}
               color={"blue"}
             >
